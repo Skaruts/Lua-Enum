@@ -1,8 +1,10 @@
 ### Usage
-Create enums by calling `enum()` and passing it a table where each key is an enum element:
+Drop this file in your project and require it
 ```lua
-enum = require "enum" -- first require the file
-
+enum = require "enum" -- returns the enum constructor
+```
+Then create enums by calling the constructor and passing it a table where each key is an enum element:
+```lua
 local days = enum({ 
   "0+1",          -- optional enum format
   "SUNDAY", 
@@ -14,7 +16,7 @@ local days = enum({
   "SATURDAY",
 }, "days")        -- optional enum name
 ```
-You can add a string as a second argument to name it, although this isn't useful for anything other than if you happen to want to print the enum with a name, rather than just `enum { ... }`.
+You can add a string as a second argument to name it, although this is pretty useless for anything other than if you happen to want to print the enum with a name, rather than just `enum { ... }`.
 
 After that you can use it:
 ```lua
