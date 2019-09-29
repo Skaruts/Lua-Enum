@@ -41,6 +41,7 @@ Lastly:
 - Standard naming rules for identifiers apply: field names cannot contain spaces, must start by a letter or underscore, can contain numbers after that, etc.
 - Duplicated strings will throw an error. 
 - Using a custom value on the first enum element will override `<start_value>`.
+- Using negative custom values with exponential growth will increase them by half toward `0`.
 
 ## Examples
 An enum that starts at `10` and is incremented by `+2`:
