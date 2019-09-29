@@ -34,7 +34,7 @@ The format string looks like this: `"<start_value><increment>"`, where `<start_v
 "*"     -- starts at 0, increments exponentially
 "1*"    -- starts at 1, increments exponentially
 ```
-Naturally, when using `*` you cannot specify the increment by a number, as it gets automatically calculated to exponents (if you put a number there it gets ignored). However, you can still use custom values.
+Naturally, when using `*` you cannot specify the increment by a number, as it gets automatically calculated to exponents (if you put a number there it gets ignored). However, you can still use custom values to control the flow of the increments.
 
 Lastly:
 - The format string can contain spaces.
