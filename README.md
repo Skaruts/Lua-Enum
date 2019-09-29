@@ -31,7 +31,7 @@ Duplicated strings will throw an error.
 ## Examples
 An enum that starts at `10` and is incremented by `+2`:
 ```lua
-local days = enum({ "10+2",
+local days = enum({ "10+2", -- <-- I usually place the format here, instead of the next line
   "SUNDAY",       -- 10
   "MONDAY",       -- 12
   "TUESDAY",      -- 14
