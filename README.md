@@ -25,7 +25,7 @@ The format string looks like this: `"<start value><increment>"` (no spaces), whe
 "*"     -- starts at 0, increments exponentially
 "1*"    -- starts at 1, increments exponentially
 ```
-Naturally, when using `*` you can't specify the increment by a number, as it gets automatically calculated to exponents. However, you can still use custom values.
+Naturally, when using `*` you cannot specify the increment by a number, as it gets automatically calculated to exponents (if you put a number there it gets ignored). However, you can still use custom values.
 
 Standard naming rules for identifiers apply: field names cannot contain spaces, must start by a letter or underscore, can contain numbers after that.
 
@@ -36,7 +36,7 @@ Using a custom value on the first enum element will override `<start value>`.
 ## Examples
 An enum that starts at `10` and is incremented by `+2`:
 ```lua
-local days = enum({ "10+2", -- <-- I usually place the format here, instead of the next line
+local days = enum({ "10+2", -- <-- by personal preference, I place the format here, instead of in the next line
   "SUNDAY",       -- 10
   "MONDAY",       -- 12
   "TUESDAY",      -- 14
