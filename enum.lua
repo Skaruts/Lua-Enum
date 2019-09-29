@@ -1,28 +1,31 @@
-
 local ENUM_MT = {}
 ENUM_MT = {
 	__index = function(t, k) return ENUM_MT[k] end,
-	__tostring = function(e)
-		local str = "enum = {\n"
-		for i=1, e.max do
-			local idx = e._values[i]
-			local v = e._ordered_fields[idx]
+	__tostring = function(t)
+		local str = ""
+		if t.name then str = t.name .. " {\n"
+		else           str = "enum {\n"
+		end
+		for i=1, t.max do
+			local idx = t._values[i]
+			local v = t._ordered_fields[idx]
 			str = string.format("%s    %-4d %s\n", str, idx, v)
 		end
-		str = str .. "}"
-		return str
+		return str .. "}"
 	end
 }
 
-local function not_in(t, key)
+local function not_in(t, new_k)
+	-- used to check for duplicated keys
 	for k, v in pairs(t) do
-		if key == k then return false end
+		if new_k == k then return false end
 	end
 	return true
 end
 
-function enum(list)
+local function enum(list, name)
 	local t = {}
+	t.name = name
 	t.max = #list
 
 	-- handy for __tostring()
@@ -32,7 +35,6 @@ function enum(list)
 	-- default values
 	local exp = false
 	local step = 1
-
 	local start = 0
 
 	-- if 1st element contains enum formatting, parse it and remove it
@@ -88,3 +90,5 @@ function enum(list)
 	end
 	return setmetatable(t, ENUM_MT)
 end
+
+return enum
