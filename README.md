@@ -51,7 +51,7 @@ local days = enum({ "*",    -- remember, if an increment is included along with 
   "SATURDAY"      -- 32
 })
 ```
-You can also specify the starting position when using `*`, as in `16*`.
+You can also specify the starting position when using `*`, as in `"16*"`.
 
 To use custom values, append them to the strings, separated by a space or tab:
 ```lua
