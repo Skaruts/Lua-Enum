@@ -68,12 +68,12 @@ local days = enum({ "*",    -- remember, increment values get ignored if include
 Enum with custom values appended to the keys, separated by spaces or tabs:
 ```lua
 local days = enum({ "+5",
-  "SUNDAY",       -- 0
-  "MONDAY",       -- 5
-  "TUESDAY -100", -- -100
-  "WEDNESDAY",    -- -95
-  "THURSDAY",     -- -90
-  "FRIDAY 256",   -- 256
-  "SATURDAY",     -- 261
+  "SUNDAY",             -- 0
+  "MONDAY",             -- 5
+  "TUESDAY     -100",   -- -100
+  "WEDNESDAY",          -- -95
+  "THURSDAY",           -- -90
+  "FRIDAY       256",   -- 256
+  "SATURDAY",           -- 261
 })
 ```
