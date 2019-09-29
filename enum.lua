@@ -15,8 +15,9 @@ ENUM_MT = {
 	end
 }
 
+-- used to check for duplicated keys
 local function not_in(t, new_k)
-	-- used to check for duplicated keys
+	
 	for k, v in pairs(t) do
 		if new_k == k then return false end
 	end
