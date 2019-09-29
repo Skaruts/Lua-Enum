@@ -23,7 +23,7 @@ print(days)          -- prints the entire enum
 
 To create a default enum, where fields are given values from `0` to `N` and are incremented by `1`, you can simply omit the format string. However, by adding the format string as the first element of the enum you can create different enums. When the first key specifies the format, it gets parsed and removed before the enum's construction takes place. You can also append custom values (including negative ones) to the enum keys themselves, separated by whitespace (see examples below).
 
-The format string looks like this: `"<start_value><increment>"` (no spaces), where `<start_value>` is any integer number and `<increment>` is a `+` followed by another integer or a `*`. The `+` makes regular increments, the `*` makes exponential increments.
+The format string looks like this: `"<start_value><increment>"` (no spaces), where `<start_value>` is any integer number, and `<increment>` is a `+` followed by another integer, or a `*`. The `+` makes regular increments, the `*` makes exponential increments.
 ```lua
 "10+5"  -- starts at 10, increments by 5
 "16"    -- starts at 16, increments by 1 (since <increment> was omitted)
