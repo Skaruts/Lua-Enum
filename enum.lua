@@ -73,15 +73,16 @@ local function enum(list, name)
 		-- if a second element exists then current entry contains a
 		-- custom value; set 'idx' to it
 		if words[2] then
-			if idx == start then start = tonumber(words[2]) end
+			if idx == start then start = tonumber(words[2]) end -- if it's the 1st one, also set start to it
 			idx = tonumber(words[2])
 		end
+		
 		-- store the entries and respective values
 		t[k] = idx
 		t._ordered_fields[idx] = k
 		table.insert(t._values, idx)
 
-		-- increment 'idx' by increments or exponential growth
+		-- increase 'idx' by increments or exponential growth
 		if not exp then
 			idx = idx + step
 		else
