@@ -1,5 +1,5 @@
 ## Lua Enum
-Implements enums in Lua, in a way that allows you minimal typing to get what you want, and not having to worry about specifying values in most cases. It automatically increments the values by 1 or exponentially, and it allows easy use of custom values to control the flow of the increments. Also allows negative values.
+Implements enums in Lua, in a way that requires minimal typing to get what you want. It automatically increments the values by 1 or exponentially, and it allows easy use of custom values to control the flow of the increments. Also allows negative values.
 
 ## Usage
 Drop this file in your project and require it
