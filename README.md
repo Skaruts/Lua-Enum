@@ -9,7 +9,7 @@ local days = enum({
   "MONDAY",
   "TUESDAY",
   -- etc
-}, "days) -- optional enum name
+}, "days") -- optional enum name
 ```
 You can add a name as a second argument, if by any chance you want to print the enum with a name, rather than just `enum = { ... }`. 
 
