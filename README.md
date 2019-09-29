@@ -52,7 +52,7 @@ local days = enum({ "10+2", -- <-- by personal preference, I place the format he
 ```
 An enum that increments exponentially:
 ```lua
-local days = enum({ "*",    -- remember, if an increment is included along with `*`, it gets ignored
+local days = enum({ "*",    -- remember, increment values get ignored if included along with `*`
   "SUNDAY",       -- 0
   "MONDAY",       -- 1
   "TUESDAY",      -- 2
