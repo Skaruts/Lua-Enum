@@ -38,11 +38,8 @@ Naturally, when using `*` you cannot specify the increment by a number, as it ge
 
 Lastly:
 - The format string can contain spaces.
-
 - Standard naming rules for identifiers apply: field names cannot contain spaces, must start by a letter or underscore, can contain numbers after that, etc.
-
 - Duplicated strings will throw an error. 
-
 - Using a custom value on the first enum element will override `<start_value>`.
 
 ## Examples
