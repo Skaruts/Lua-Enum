@@ -41,7 +41,7 @@ Naturally, when using `*` you cannot specify the increment by a number, as it ge
 Lastly:
 - The format string can contain spaces.
 - Standard naming rules for identifiers apply: element names cannot contain spaces, must start by a letter or underscore, can contain numbers after that, etc.
-- Duplicated strings will throw an error. 
+- Duplicated elements will throw an error. 
 - Using a custom value on the first enum element will override `<start_value>`.
 - Using negative custom values with exponential growth will increase them by half toward `0`.
 - The enum constructor (and everything else) is defined locally, so you can have full control over its scope when requiring it
