@@ -25,6 +25,7 @@ The format string looks like this: `"<start value><increment>"` (no spaces), whe
 Naturally, when using `*` you can't specify the increment by a number, as it gets set automatically calculated to exponents. However, you can still use custom values (see the examples below).
 
 Standard naming rules for identifiers apply: field names cannot contain spaces, must start by a letter or underscore, can contain numbers after that.
+
 Duplicated strings will throw an error. 
 
 ## Examples
