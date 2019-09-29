@@ -1,10 +1,8 @@
 ### Usage
-First require the file:
+Create enums by calling `enum()` and passing it a table where each key is an enum field:
 ```lua
-enum = require "enum"  
-```
-Then you can create enums by calling `enum()` and passing it a table where each key is an enum field:
-```lua
+enum = require "enum" -- first require the file
+
 local days = enum({ 
   "0+1", -- optional enum format
   "SUNDAY", 
