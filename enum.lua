@@ -55,7 +55,7 @@ local function enum(list, name)
 		if ast then
 			exp = true
 		elseif plus then
-			-- if a '+' exists, check if there's an increment specification
+			-- if a '+' exists, check if there's a custom increment
 			local inc = string.match(str:sub(plus+1, #str), "[0-9]+")
 			if inc then step = inc end
 		end
