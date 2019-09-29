@@ -55,7 +55,7 @@ You can also specify the starting position when using `*`, as in `"16*"`.
 
 To use custom values, append them to the strings, separated by a space or tab:
 ```lua
-local days = enum({ "+5",    -- starts at 0 (because the start value was omitted), and increments by 5
+local days = enum({ "+5",
   "SUNDAY",       -- 5
   "MONDAY",       -- 10
   "TUESDAY 100",  -- 100
