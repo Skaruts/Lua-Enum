@@ -15,7 +15,7 @@ local days = enum({
 That creates a default enum, where fields are given values from `0` to `N`, incremented by `1`. You can create enums of different formats by adding a format string before the first enum field. When the first string specifies the format, it gets parsed and removed before the enum's construction takes place. You can also append custom values (including negative ones) to the field strings.
 
 The format string looks like this: `"<start value><increment>"` (no spaces), where `<start value>` is any integer number and `<increment>` is a `+` followed by another integer or a `*`. `+` makes regular increments, `*` makes exponential increments.
-```
+```lua
 "10+5"  -- starts at 10, increments by 5
 "16"    -- starts at 16, increments by 1 (since increment was omitted)
 "+2"    -- starts at 0 (start was omited), increments by 2
