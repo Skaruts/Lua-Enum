@@ -109,7 +109,7 @@ local function enum(list, name)
 		if not exp then
 			idx = idx + step
 		else
-			if idx ~= -1 and idx ~= 0 and idx ~= 1 then
+			if idx < -1 and idx > 1 then
 				if idx < 0 then idx = math.ceil(idx/2)
 				else            idx = idx + idx end
 			else
