@@ -44,7 +44,7 @@ Lastly:
 - Using negative custom values with exponential growth will increase them by half toward `0`.
 
 ## Examples
-An enum that starts at `10` and is incremented by `+2`:
+Enum that starts at `10` and is incremented by `+2`:
 ```lua
 local days = enum({ "10+2", -- <-- by personal preference, I place the format here, instead of in the next line
   "SUNDAY",       -- 10
@@ -54,7 +54,7 @@ local days = enum({ "10+2", -- <-- by personal preference, I place the format he
   -- etc
 })
 ```
-An enum that increments exponentially:
+Enum that increments exponentially:
 ```lua
 local days = enum({ "*",    -- remember, increment values get ignored if included along with `*`
   "SUNDAY",       -- 0
