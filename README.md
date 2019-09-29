@@ -42,12 +42,12 @@ The format string looks like this: `"<start_value><increment>"`, where `<start_v
 Naturally, when using `*` you cannot specify the increment by a number, as it gets automatically calculated to exponents (if you put a number there it gets ignored). However, you can still use custom values to control the flow of the increments.
 
 Lastly:
-- The format string can contain spaces.
-- Standard naming rules for identifiers apply: element names cannot contain spaces, must start by a letter or underscore, can contain numbers after that, etc.
-- Duplicated elements will throw an error. 
-- Using a custom value on the first enum element will override `<start_value>`.
-- Using negative custom values with exponential growth will increase them by half toward `0`.
-- The enum constructor (and everything else) is defined locally, so you can have full control over its scope when requiring it
+- The format string can contain spaces
+- Standard naming rules for identifiers apply: element names cannot contain spaces, must start by a letter or underscore, can contain numbers after that, etc
+- Duplicated elements will throw an error
+- Using a custom value on the first enum element will override `<start_value>`
+- Using negative custom values with exponential growth will increase them by half toward `0`
+- The enum constructor (and everything else) is defined locally, so you can control its scope when requiring it
 
 ## Examples
 Enum that starts at `10` and is incremented by `+2`:
