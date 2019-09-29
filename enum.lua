@@ -16,11 +16,11 @@ ENUM_MT = {
 }
 
 -- used to check for duplicated keys
-local function not_in(t, new_k)
+local function is_in(t, new_k)
 	for k, v in pairs(t) do
-		if new_k == k then return false end
+		if new_k == k then return true end
 	end
-	return true
+	return false
 end
 
 local function enum(list, name)
@@ -67,7 +67,7 @@ local function enum(list, name)
 		local words = {}
 		for word in list[i]:gmatch("[a-zA-Z0-9_-]+") do table.insert(words, word) end
 		local k = words[1]
-		assert( not_in(t, k), string.format("\n\n    Entry '%s' already exists in enum.\n\n", k) )
+		assert( not is_in(t, k), string.format("\n\n    Entry '%s' already exists in enum.\n\n", k) )
 
 		-- if a second element exists then current entry contains a
 		-- custom value; set 'idx' to it
@@ -75,7 +75,7 @@ local function enum(list, name)
 			if idx == start then start = tonumber(words[2]) end -- if it's the 1st one, also set start to it
 			idx = tonumber(words[2])
 		end
-		
+
 		-- store the entries and respective values
 		t[k] = idx
 		t._ordered_fields[idx] = k
@@ -85,8 +85,12 @@ local function enum(list, name)
 		if not exp then
 			idx = idx + step
 		else
-			if idx > 1 then idx = idx+idx
-			else            idx = idx+1 end
+			if idx ~= -1 and idx ~= 0 and idx ~= 1 then
+				if idx < 0 then idx = math.ceil(idx/2)
+				else            idx = idx + idx end
+			else
+				idx = idx + 1
+			end
 		end
 	end
 	return setmetatable(t, ENUM_MT)
