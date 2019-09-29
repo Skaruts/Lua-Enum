@@ -1,5 +1,5 @@
 ### Usage
-Create enums by calling `enum()` and passing it a table where each key is an enum field:
+Create enums by calling `enum()` and passing it a table where each key is an enum element:
 ```lua
 enum = require "enum" -- first require the file
 
@@ -24,7 +24,7 @@ print(days.max)      -- 7 (number of elements in the enum -- useful in 'for' loo
 print(days)          -- prints the entire enum (in human-readable form)
 ```
 
-To create a default enum, where fields are given values from `0` to `N` and are incremented by `1`, you can simply omit the format string. However, by adding the format string as the first element of the enum you can manipulate how values are assigned. You can also append custom values (including negative ones) to the enum keys themselves, separated by whitespace.
+To create a default enum, where elements are given values from `0` to `N` and are incremented by `1`, you can simply omit the format string. However, by adding the format string as the first element of the enum you can manipulate how values are assigned. You can also append custom values (including negative ones) to the enum keys themselves, separated by whitespace.
 
 The format string looks like this: `"<start_value><increment>"`, where `<start_value>` is any integer number, and `<increment>` is a `+` followed by another integer, or a `*`. The `+` makes regular increments, the `*` makes exponential increments.
 ```lua
@@ -38,7 +38,7 @@ Naturally, when using `*` you cannot specify the increment by a number, as it ge
 
 Lastly:
 - The format string can contain spaces.
-- Standard naming rules for identifiers apply: field names cannot contain spaces, must start by a letter or underscore, can contain numbers after that, etc.
+- Standard naming rules for identifiers apply: element names cannot contain spaces, must start by a letter or underscore, can contain numbers after that, etc.
 - Duplicated strings will throw an error. 
 - Using a custom value on the first enum element will override `<start_value>`.
 - Using negative custom values with exponential growth will increase them by half toward `0`.
