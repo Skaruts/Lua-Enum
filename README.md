@@ -9,7 +9,7 @@ enum = require "enum" -- returns the enum constructor
 Then create enums by calling the constructor and passing it a table where each key is an enum element:
 ```lua
 local days = enum({ 
-  "0+1",          -- optional enum format
+  "0+1",          -- optional format string
   "SUNDAY", 
   "MONDAY",
   "TUESDAY",
