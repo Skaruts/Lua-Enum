@@ -1,10 +1,10 @@
 ## Lua Enum
-Implements enums in Lua in a way that allows flexibility while requiring minimal typing to get what you want. It automatically increments the values by 1, by a specified value, or exponentially, and it allows easy use of custom values to control the flow of the increments. It also allows negative values, and includes a `max` field that gives you the number of elements in the enum.
+Implements enums in Lua in a way that allows some flexibility while requiring minimal effort. It automatically increments the values by 1, by a specified value, or exponentially, and it allows easy use of custom values. It also allows negative values, and provides a `max` field that holds the number of elements in the enum.
 
 ## Usage
 Drop this file in your project and require it
 ```lua
-Enum = require "enum" -- returns the enum constructor
+local Enum = require "enum" -- returns the Enum constructor
 ```
 Then create enums by calling the constructor and passing it a table where each key is an enum element:
 ```lua
