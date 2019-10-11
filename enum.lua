@@ -21,7 +21,6 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==
-
 local ENUM_MT = {}
 ENUM_MT = {
 	__index = function(t, k) return ENUM_MT[k] end,
@@ -59,7 +58,7 @@ local function enum(list, name)
 	-- default values
 	local exp = false
 	local step = 1
-	local start = 0
+	local start = 1
 
 	-- if 1st element contains enum formatting, parse it and remove it
 	if not string.match(list[1], "^[a-zA-Z_]+") then
@@ -69,7 +68,7 @@ local function enum(list, name)
 
 		-- if string begins with a number, set it as start
 		if tonumber(str:sub(1, 1)) ~= nil then
-			start = tonumber(string.match(str, "[0-9]+")) or 0
+			start = tonumber(string.match(str, "[0-9]+")) or 1
 		end
 
 		-- check if there's any '+' or '*'
