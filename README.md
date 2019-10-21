@@ -75,26 +75,28 @@ local days = Enum( "10+2", -- <-- by personal preference, I place the format her
 ```
 Enum that increments exponentially:
 ```lua
-local days = Enum( "*",    -- remember, increment values get ignored if included along with `*`
-  "SUNDAY",       -- 1
-  "MONDAY",       -- 2
-  "TUESDAY",      -- 4
-  "WEDNESDAY",    -- 8
-  "THURSDAY",     -- 16
-  "FRIDAY",       -- 32
-  "SATURDAY"      -- 64
+local Flags = Enum( "*",    -- remember, increment values get ignored if included along with `*`
+  "SOME_FLAG_1",       -- 1
+  "SOME_FLAG_2",       -- 2
+  "SOME_FLAG_3",       -- 4
+  "SOME_FLAG_4",       -- 8
+  "SOME_FLAG_5",       -- 16
+  "SOME_FLAG_6",       -- 32
+  "SOME_FLAG_7"        -- 64
 )
 ```
 Enum with custom values appended to the keys, separated by spaces or tabs:
 ```lua
-local days = Enum( "+5",
-  "SUNDAY",             -- 1
-  "MONDAY",             -- 6
-  "TUESDAY     -100",   -- -100
-  "WEDNESDAY",          -- -95
-  "THURSDAY",           -- -90
-  "FRIDAY       256",   -- 256
-  "SATURDAY",           -- 261
+local Tiles = Enum( "0"
+  "VOID",                -- 0
+  "WALL_STONE",          -- 1
+  "WALL_WOOD"            -- 2
+  "WALL_PLASTER"         -- 3
+  "FLOOR_DIRT    20",    -- 20
+  "FLOOR_GRASS",         -- 21
+  "FLOOR_WOOD",          -- 22
+  "WATER         40",    -- 40
+  "LAVA",                -- 41
 )
 ```
 You can also provide the elements in a table
