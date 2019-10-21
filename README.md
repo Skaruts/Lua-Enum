@@ -28,7 +28,9 @@ print(days.count)    -- 7 (number of fields in the enum)
 print(days)          -- prints the entire enum (in human-readable form)
 ```
 
-To create a default enum (where elements are given values from `1` to `N` and are incremented by `1`) you can simply omit the format string. However, by adding the format string as the first element of the enum you can manipulate how values are assigned. You can also append custom values (including negative ones) to the enum keys themselves, separated by whitespace.
+The format string is optional. If it's included, it as to be the first parameter. If it's omited, a default enum (where elements are given values from `1` to `N` and are incremented by `1`) is created. However, by adding the format string you can manipulate how values are assigned. 
+
+You can also append custom values (including negative ones) to the enum keys themselves, separated by whitespace (see example near the bottom).
 
 The format string looks like this: `"<start_value><increment>"`, where `<start_value>` is any integer number, and `<increment>` is a `+` followed by another integer, or a `*`. The `+` makes regular increments, the `*` makes exponential increments.
 ```lua
@@ -39,7 +41,7 @@ The format string looks like this: `"<start_value><increment>"`, where `<start_v
 "0*"      -- starts at 0, increments exponentially
 "-10+-1"  -- starts at -10, decrements by -1
 ```
-Naturally, when using `*` you cannot specify the increment by a number, as it gets automatically calculated to exponents (if you put a number there it gets ignored). However, you can still use custom values to control the flow of the increments (see example at the bottom).
+Naturally, when using `*` you cannot specify the increment by a number, as it gets automatically calculated to exponents (if you put a number there it gets ignored). However, you can still use custom values to control the flow of the increments.
 
 Lastly:
 - The format string can contain spaces
