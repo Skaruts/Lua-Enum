@@ -101,7 +101,7 @@ local Tiles = Enum( "0"
 ```
 You can also provide the elements in a table
 ```lua
-local t = {"SUNDAY", "MONDAY", "TUESDAY, "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"}
+local t = {"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"}
 table.insert(t, "0", 1) -- add the format
 local days = Enum(t)
 ```
