@@ -52,12 +52,12 @@ Lastly:
 - You can use enums in loops. Enum has its own iterator `items()` that returns an ordered array with its elements:
 ```lua
 -- loop with Enum:items()
-for i, v in foo:items() do  -- 
+for i, v in days:items() do  -- 
 	print(i, v)
 end
 
 -- loop normally
-for i=1, foo.count do
+for i=1, days.count do
 	print(foo[i])
 end
 ```
