@@ -49,7 +49,7 @@ Lastly:
 - Duplicated elements will throw an error
 - Using a custom value on the first enum element will override `<start_value>`
 - Using negative custom values with exponential growth will increase them by half toward `0`
-- You can use enums in loops. Enum has its own iterator items() that returns an ordered array with its elements:
+- You can use enums in loops. Enum has its own iterator `items()` that returns an ordered array with its elements:
 ```lua
 -- loop with Enum:items()
 for i, v in foo:items() do  -- 
