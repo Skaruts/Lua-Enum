@@ -16,7 +16,7 @@ local days = Enum(
   "WEDNESDAY",
   "THURSDAY 100", -- optional custom values
   "FRIDAY",
-  "SATURDAY",
+  "SATURDAY"
 )
 ```
 
@@ -96,7 +96,7 @@ local Tiles = Enum( "0"
   "FLOOR_GRASS",         -- 21
   "FLOOR_WOOD",          -- 22
   "WATER         40",    -- 40
-  "LAVA",                -- 41
+  "LAVA"                 -- 41
 )
 ```
 You can also provide the elements in a table
