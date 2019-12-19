@@ -87,7 +87,7 @@ local Flags = Enum( "*",    -- remember, increment values get ignored if include
 ```
 Enum with custom values appended to the keys, separated by spaces or tabs:
 ```lua
-local Tiles = Enum( "0"
+local Tiles = Enum( "0",
   "VOID",                -- 0
   "WALL_STONE",          -- 1
   "WALL_WOOD"            -- 2
