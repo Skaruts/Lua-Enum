@@ -21,50 +21,85 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==
+local fmt = string.format
+local match = string.match
+local remove = table.remove
+local ceil = math.ceil
+local type = type
+local next = next
+local setmetatable = setmetatable
+
+local function _iterator(t, i)
+	i = i+1
+	local val = t[i]
+	if i > #t then return end
+	return i, val
+end
+
 local Enum = {}
 local MT = {
-	__index = function(t, k) return
-		t._fields[k] or Enum[k] or t._iterable_values[k]
-		or error(string.format("\n\n    Field %s does not exist in enum.\n\n", k), 2)
+	__type = "enum",
+	__index = function(t, k)
+		return t._fields[k]
+		or Enum[k]
+		or t._iterable_values[k]
+		or error(fmt("field %s does not exist in enum", k), 2)
 	end,
-	__newindex = function(t, k, v) error("\n\n    Enum is immutable.\n\n", 2) end,
+	__newindex = function(t, k, v) error("cannot assign to an enum (enums are immutable)", 2) end,
 	__tostring = function(t)
-		local str = "{\n"
+		local str = "enum: "
 		for i=1, #t._ordered_fields do
 			local k = t._ordered_fields[i]
 			local v = t._fields[k]
-			str = str.. string.format("    %-4d %s\n", v, k)
+			str = str .. fmt("%s = %d", k, v)
+			if i < #t._ordered_fields then str = str .. ", " end
 		end
-		return str .. "}"
-	end
+		return str .. ""
+	end,
+	-- for lua 5.2+
+	__ipairs = function(t) return _iterator, t._iterable_values, 0 end,
+	__pairs = function(t) return next, t._fields, nil end,
 }
-function Enum.new(...)
+
+-- for lua 5.1
+function Enum:ipairs() return _iterator, self._iterable_values, 0 end
+function Enum:pairs() return next, self._fields, nil end
+
+
+local function _new(...)
 	if type(...) ~= "string" and type(...) ~= "table" then
-		error("\n\n    Invalid object for enum initialization. Must be a table or list of strings.\n\n")
+		error("invalid parameters for enum: must be a table or list of strings", 2)
 	end
-	local t = { count = {}, _fields = {}, _ordered_fields = {}, _iterable_values = {} }
-	setmetatable(t, MT)
+
+	local t = {
+		count = {},
+		_fields = {},
+		_ordered_fields = {},
+		_iterable_values = {},
+		__longest_field = 0,  -- for pretty printing
+	}
 
 	local exp = false    -- exponential stepping
 	local step = 1       -- incremental step
 	local start = 1      -- starting value
-	local elems = {...}
-	if type(elems[1]) == "table" then elems = elems[1] end
+	local elems = type(...) == "table" and ... or {...}
 
 	-- if 1st field is the enum formatting, parse it and remove it
-	if not string.match(elems[1], "^[%a_]+") then
+	if not elems[1]:match("^[%a_]+") then
 		local str = elems[1]
-		table.remove(elems, 1)
+		remove(elems, 1)
 
-		-- if string begins with a number, set it as start
-		if str:match("^[%d-]") then start = tonumber(str:match("[%d-]+")) or 1 end
+		-- if string begins with a number, set it as start value
+		if str:match("^[%d-]") then
+			start = tonumber(str:match("[%d-]+")) or 1
+		end
 
-		local plus = str:find('+')  -- check if there's any '+'
-		if str:find('*') then       -- or '*'
-			exp = true
-		elseif plus then            -- if a '+' exists, check if there's a custom increment
-			local inc = string.match(str:sub(plus+1, #str), "[%d-]+")
+		local plus = str:find('+')  -- check if there's a '+'
+		if plus then  -- if a '+' exists, check if there's a custom increment
+			local inc = match(str:sub(plus+1, #str), "[%d-]+")
 			if inc then step = inc end
+		elseif str:find('*') then  -- otherwise check if there's a '*'
+			exp = true
 		end
 	end
 
@@ -78,7 +113,11 @@ function Enum.new(...)
 		end
 
 		local k = words[1]
-		if t._fields[k] then error( string.format("\n\n    Field '%s' already exists in enum.\n\n", k) ) end
+		if t._fields[k] then error(fmt("duplicate field '%s' in enum", k), 2) end
+
+		if #k > t.__longest_field then
+			t.__longest_field = #k
+		end
 
 		-- if a second element exists then current entry contains a custom value
 		if words[2] then val = tonumber(words[2]) end
@@ -90,22 +129,54 @@ function Enum.new(...)
 
 		-- increase 'val' by increments or exponential growth
 		if not exp then                   val = val + step
-		elseif val < -1 or val > 1 then   val = val < 0 and math.ceil(val/2) or val + val
+		elseif val < -1 or val > 1 then   val = val < 0 and ceil(val/2) or val + val
 		else                              val = val + 1
 		end
 	end
-	return t
+
+	return setmetatable(t, MT)
 end
 
-local function iterator(t, i)
-	i = i+1
-	local val = t[i]
-	if i > #t then return end
-	return i, val
+-- pretty print - prints the enum neatly over several lines and indented
+function Enum:pprint()
+	local str = "enum {\n"
+	for i=1, #self._ordered_fields do
+		local k = self._ordered_fields[i]
+		local v = self._fields[k]
+		str = str.. fmt(fmt("    %%-%ds%%6d\n", self.__longest_field), k, v)
+	end
+	return str .. "}"
 end
 
-function Enum:items()
-	return iterator, self._iterable_values, 0
-end
 
-return setmetatable( Enum, { __call = function(_, ...) return Enum.new(...) end } )
+
+
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+-- TESTS
+
+-- local do_tests = true
+
+if do_tests
+and (not love or not debug.getinfo(2).name) then
+	local e = _new({"*",
+		"foo",
+		"bar",
+		"derp",
+		"poo",
+		"ferp",
+		"snherp",
+		"ftosdso"
+	})
+
+	print(e)
+
+	-- for k,v in e:pairs() do print(k,v) end
+	-- for i,v in e:ipairs() do print(i,v) end
+	-- for k,v in pairs(e) do print(k,v) end
+	-- for i,v in ipairs(e) do print(i,v) end
+end
+--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
+
+
+
+return setmetatable( Enum, { __call = function(_, ...) return _new(...) end } )
