@@ -55,7 +55,7 @@ Duplicate elements will throw an error.
 
 The format is optional, and it allows you to specify how values are assigned. When omited, a default enum is created, where elements are given values from `0` to `N`, and are incremented by `1`. If it's included, then it has to be the first parameter.
 
-The format should look like this: `"<start_value> <increment>"`, where `<start_value>` is any integer number, and `<increment>` is either a `+` followed by another integer, or a single `*`. The `+` makes regular increments, the `*` makes exponential increments. The format string can contain spaces.
+The format should look like this: `"<start_value> <increment>"`, where `<start_value>` is any integer number, and `<increment>` is either a `+` followed by an integer, or a single `*`. The `+` sets regular increments, the `*` sets exponential increments.
 
 For example:
 
@@ -65,7 +65,7 @@ For example:
 '+2'        -- starts at 0 (since <start_value> was omited), increments by 2
 '*'         -- starts at 0, increments exponentially
 '1*'        -- starts at 1, increments exponentially
-'-10 + -1'  -- starts at -10, increments by -1 (decrements)
+'-10+-1'    -- starts at -10, increments by -1 (decrements)
 ```
 
 When using `*` the increment is automatically calculated to exponents (if you put a number after the `*`, it gets ignored). However, you can still control the flow of the increments by adding custom values to elements.
