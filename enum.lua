@@ -28,6 +28,8 @@ local ceil = math.ceil
 local type = type
 local next = next
 local setmetatable = setmetatable
+local tonumber = tonumber
+
 
 local function _iterator(t, i)
 	i = i+1
@@ -65,12 +67,19 @@ local MT = {
 function Enum:ipairs() return _iterator, self._iterable_values, 0 end
 function Enum:pairs() return next, self._fields, nil end
 
-
-local function _new(...)
-	if type(...) ~= "string" and type(...) ~= "table" then
-		error("invalid parameters for enum: must be a table or list of strings", 2)
+-- pretty print - prints the enum neatly over several lines and indented
+function Enum:pprint()
+	local str = "enum {\n"
+	for i=1, #self._ordered_fields do
+		local k = self._ordered_fields[i]
+		local v = self._fields[k]
+		str = str.. fmt(fmt("    %%-%ds%%6d\n", self.__longest_field), k, v)
 	end
+	return str .. "}"
+end
 
+
+local function _new_from_table(...)
 	local t = {
 		count = {},
 		_fields = {},
@@ -137,15 +146,34 @@ local function _new(...)
 	return setmetatable(t, MT)
 end
 
--- pretty print - prints the enum neatly over several lines and indented
-function Enum:pprint()
-	local str = "enum {\n"
-	for i=1, #self._ordered_fields do
-		local k = self._ordered_fields[i]
-		local v = self._fields[k]
-		str = str.. fmt(fmt("    %%-%ds%%6d\n", self.__longest_field), k, v)
+
+local function _new_from_string(s)
+	local t = {}
+	for word in s:gmatch('([^,\r\n\t =]+)') do
+	    t[#t+1] = word
 	end
-	return str .. "}"
+
+	local out = {}
+	for i=1, #t do
+		if not tonumber(t[i]) then
+			out[#out+1] = t[i]
+		else
+			out[#out] = out[#out] .. " " .. tonumber(t[i])
+		end
+
+	end
+	return _new_from_table(out)
+end
+
+
+local _constructors = {
+	string = _new_from_string,
+	table = _new_from_table,
+}
+
+local function _new(...)
+	if not _constructors[type(...)] then error("invalid parameters for enum: must be a table or list of strings", 2) end
+	return _constructors[type(...)](...)
 end
 
 
@@ -158,15 +186,15 @@ end
 
 if do_tests
 and (not love or not debug.getinfo(2).name) then
-	local e = _new({"*",
-		"foo",
-		"bar",
-		"poo",
-		"derp",
-		"ferp",
-		"shmerp",
-		"flerp"
-	})
+	-- local e = _new({"*",
+	-- 	"foo",
+	-- 	"bar",
+	-- 	"poo",
+	-- 	"derp",
+	-- 	"ferp",
+	-- 	"shmerp",
+	-- 	"flerp"
+	-- })
 
 	-- print(e)
 
@@ -174,7 +202,25 @@ and (not love or not debug.getinfo(2).name) then
 	-- for i,v in e:ipairs() do print(i,v) end
 	-- for k,v in pairs(e) do print(k,v) end
 	-- for i,v in ipairs(e) do print(i,v) end
-	for i=1, e.count do print(e[i]) end
+	-- for i=1, e.count do print(e[i]) end
+	-- local e2 = _new([[
+	-- 	foo=10
+	-- 	derp=20
+	-- 	]])
+	local e2 = _new([[10+100
+		foo
+		bar
+		poo =
+		derp
+		ferp
+		shmerp
+		flerp
+	]])
+	-- print(e2)
+	print()
+	print("e2", e2:pprint())
+	print("e2", e2.poo)
+	print("e2", e2.foo)
 end
 --=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 
