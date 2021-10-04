@@ -3,7 +3,7 @@ Implements enums in Lua in a way that allows some flexibility and minimal effort
 
 ## Usage
 
-Enums can be constructed in one of three ways:
+Enums can be constructed in three ways:
 
 ```lua
 local Enum = require "enum" 
