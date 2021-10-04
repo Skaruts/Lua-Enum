@@ -73,7 +73,7 @@ function Enum:pprint()
 	for i=1, #self._ordered_fields do
 		local k = self._ordered_fields[i]
 		local v = self._fields[k]
-		str = str.. fmt(fmt("    %%-%ds%%6d\n", self.__longest_field), k, v)
+		str = str.. fmt(fmt("    %%-%ds%%d\n", self.__longest_field+4), k, v)
 	end
 	print(str .. "}")
 end
@@ -149,8 +149,8 @@ end
 
 local function _new_from_string(s)
 	local t = {}
-	s = s:gsub("--(-.-)\n","\n")
-
+	s = s:gsub("%-%-[^\n]+", "")
+	print(s)
 	for word in s:gmatch('([^,\r\n\t =]+)') do
 	    t[#t+1] = word
 	end
@@ -177,54 +177,6 @@ local function _new(...)
 	if not _constructors[type(...)] then error("invalid parameters for enum: must be a table or list of strings", 2) end
 	return _constructors[type(...)](...)
 end
-
-
-
-
---=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
--- TESTS
-
--- local do_tests = true
-
-if do_tests
-and (not love or not debug.getinfo(2).name) then
-	-- local e = _new({"*",
-	-- 	"foo",
-	-- 	"bar",
-	-- 	"poo",
-	-- 	"derp",
-	-- 	"ferp",
-	-- 	"shmerp",
-	-- 	"flerp"
-	-- })
-
-	-- print(e)
-
-	-- for k,v in e:pairs() do print(k,v) end
-	-- for i,v in e:ipairs() do print(i,v) end
-	-- for k,v in pairs(e) do print(k,v) end
-	-- for i,v in ipairs(e) do print(i,v) end
-	-- for i=1, e.count do print(e[i]) end
-
-
-	local e2 = _new([[
-		foo
-		bar
-		poo  -- comment -- test
-		derp
-		ferp -- more test
-		shmerp
-		flerp
-	]])
-	-- print(e2)
-	print()
-	e2:pprint()
-	print("e2", e2.poo)
-	print("e2", e2.foo)
-
-
-end
---=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 
 
 
