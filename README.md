@@ -32,7 +32,7 @@ days:pprint()        -- pretty-prints the enum in a more readable form
 
 Standard naming rules for identifiers apply: element names cannot contain spaces, must start by a letter or underscore, can contain numbers, etc.
 
-Duplicate elements will throw an error
+Duplicate elements will throw an error.
 
 ### Format
 
