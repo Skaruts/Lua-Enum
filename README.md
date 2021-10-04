@@ -27,8 +27,8 @@ local days = Enum( '0+1',
   "MONDAY",
   "TUESDAY",
   "WEDNESDAY",
-  "THURSDAY   100",    
-  "FRIDAY     -10",    
+  "THURSDAY    100",    -- only the multiline string constructor above
+  "FRIDAY      -10",    -- supports '=' as a separator
   "SATURDAY"
 )
 
