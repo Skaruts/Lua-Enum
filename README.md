@@ -23,13 +23,13 @@ local days = Enum([[ 0+1    -- optional format (see below) -- these are the defa
 
 -- construct enum from several strings, one for each element
 local days = Enum( '0+1',    
-  "SUNDAY", 
-  "MONDAY",
-  "TUESDAY",
-  "WEDNESDAY",
-  "THURSDAY    100",    -- only the multiline string constructor above
-  "FRIDAY      -10",    -- supports '=' as a separator
-  "SATURDAY"
+    "SUNDAY", 
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY    100",    -- only the multiline string constructor above
+    "FRIDAY      -10",    -- supports '=' as a separator
+    "SATURDAY"
 )
 
 
@@ -103,27 +103,27 @@ end
 ## Some real world examples
 
 ```lua
-local window_flags = Enum('*',
-  "DEFAULT",         -- 0 
-  "NO_TITLE",        -- 1
-  "NO_DRAGGING",     -- 2
-  "NO_CLOSE",        -- 4
-  "NO_BORDER",       -- 8
-  "NO_ICON",         -- 16
-  "FULLSCREEN"       -- 32
-)
+local window_flags = Enum([[ *
+    DEFAULT              -- 0 
+    NO_TITLE             -- 1
+    NO_DRAGGING          -- 2
+    NO_CLOSE             -- 4
+    NO_BORDER            -- 8
+    NO_ICON              -- 16
+    FULLSCREEN           -- 32
+]])
 ```
 
 ```lua
-local tile_types = Enum(
-  "VOID",                -- 0
-  "WALL_STONE",          -- 1
-  "WALL_WOOD"            -- 2
-  "WALL_PLASTER"         -- 3
-  "FLOOR_DIRT    20",    -- 20
-  "FLOOR_GRASS",         -- 21
-  "FLOOR_WOOD",          -- 22
-  "WATER         40",    -- 40
-  "LAVA"                 -- 41
-)
+local tile_types = Enum([[
+    VOID                 -- 0
+    WALL_STONE           -- 1
+    WALL_WOOD            -- 2
+    WALL_PLASTER         -- 3
+    FLOOR_DIRT   = 20    -- 20
+    FLOOR_GRASS          -- 21
+    FLOOR_WOOD           -- 22
+    WATER        = 40    -- 40
+    LAVA                 -- 41
+]])
 ```
