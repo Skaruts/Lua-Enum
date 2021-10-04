@@ -75,7 +75,7 @@ function Enum:pprint()
 		local v = self._fields[k]
 		str = str.. fmt(fmt("    %%-%ds%%6d\n", self.__longest_field), k, v)
 	end
-	return str .. "}"
+	print(str .. "}")
 end
 
 
@@ -149,6 +149,8 @@ end
 
 local function _new_from_string(s)
 	local t = {}
+	s = s:gsub("--(-.-)\n","\n")
+
 	for word in s:gmatch('([^,\r\n\t =]+)') do
 	    t[#t+1] = word
 	end
@@ -203,24 +205,24 @@ and (not love or not debug.getinfo(2).name) then
 	-- for k,v in pairs(e) do print(k,v) end
 	-- for i,v in ipairs(e) do print(i,v) end
 	-- for i=1, e.count do print(e[i]) end
-	-- local e2 = _new([[
-	-- 	foo=10
-	-- 	derp=20
-	-- 	]])
-	local e2 = _new([[10+100
+
+
+	local e2 = _new([[
 		foo
 		bar
-		poo =
+		poo  -- comment -- test
 		derp
-		ferp
+		ferp -- more test
 		shmerp
 		flerp
 	]])
 	-- print(e2)
 	print()
-	print("e2", e2:pprint())
+	e2:pprint()
 	print("e2", e2.poo)
 	print("e2", e2.foo)
+
+
 end
 --=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 
