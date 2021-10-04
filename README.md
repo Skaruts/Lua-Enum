@@ -3,20 +3,37 @@ Implements enums in Lua in a way that allows some flexibility and minimal effort
 
 ## Usage
 
+Enums can be constructed in one of three ways:
+
 ```lua
 local Enum = require "enum" 
 
-local days = Enum( '0+1',    -- optional format (see below) -- these are the default values
+
+-- construct enum from a multiline string
+local days = Enum([[ 0+1    -- optional format (see below) -- these are the default values
+    SUNDAY             
+    MONDAY             
+    TUESDAY            
+    WEDNESDAY
+    THURSDAY  = 100    -- you can append custom values, separated by '=' or white-space
+    FRIDAY    = -10    -- enums support negative values
+    SATURDAY
+]])
+
+
+-- construct enum from several strings, one for each element
+local days = Enum( '0+1',    
   "SUNDAY", 
   "MONDAY",
   "TUESDAY",
   "WEDNESDAY",
-  "THURSDAY   100",    -- you can append custom values, separated by white-space
-  "FRIDAY     -10",    -- enums support negative values
+  "THURSDAY   100",    
+  "FRIDAY     -10",    
   "SATURDAY"
 )
 
--- or using a table (it can contain the format)
+
+-- construct enum from a table (it can contain the format)
 local t = {"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"}
 local days = Enum(t)
 ```
