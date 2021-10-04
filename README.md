@@ -9,7 +9,7 @@ Enums can be constructed in one of three ways:
 local Enum = require "enum" 
 
 
--- construct enum from a multiline string
+-- construct enum from a multiline string (can contain single line comments)
 local days = Enum([[ 0+1    -- optional format (see below) -- these are the default values
     SUNDAY             
     MONDAY             
