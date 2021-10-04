@@ -81,7 +81,7 @@ local function _new(...)
 
 	local exp = false    -- exponential stepping
 	local step = 1       -- incremental step
-	local start = 1      -- starting value
+	local start = 0      -- starting value
 	local elems = type(...) == "table" and ... or {...}
 
 	-- if 1st field is the enum formatting, parse it and remove it
@@ -91,7 +91,7 @@ local function _new(...)
 
 		-- if string begins with a number, set it as start value
 		if str:match("^[%d-]") then
-			start = tonumber(str:match("[%d-]+")) or 1
+			start = tonumber(str:match("[%d-]+")) or 0
 		end
 
 		local plus = str:find('+')  -- check if there's a '+'
@@ -161,19 +161,20 @@ and (not love or not debug.getinfo(2).name) then
 	local e = _new({"*",
 		"foo",
 		"bar",
-		"derp",
 		"poo",
+		"derp",
 		"ferp",
-		"snherp",
-		"ftosdso"
+		"shmerp",
+		"flerp"
 	})
 
-	print(e)
+	-- print(e)
 
 	-- for k,v in e:pairs() do print(k,v) end
 	-- for i,v in e:ipairs() do print(i,v) end
 	-- for k,v in pairs(e) do print(k,v) end
 	-- for i,v in ipairs(e) do print(i,v) end
+	for i=1, e.count do print(e[i]) end
 end
 --=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--
 
