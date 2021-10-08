@@ -21,14 +21,15 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==
-local fmt = string.format
-local match = string.match
-local remove = table.remove
-local ceil = math.ceil
-local type = type
-local next = next
+local fmt          = string.format
+local remove       = table.remove
+local ceil         = math.ceil
+local abs          = math.abs
+local type         = type
+local next         = next
+local select       = select
+local tonumber     = tonumber
 local setmetatable = setmetatable
-local tonumber = tonumber
 
 
 local function _iterator(t, i)
@@ -38,9 +39,11 @@ local function _iterator(t, i)
 	return i, val
 end
 
+local _make_globals = false
+
 local Enum = {}
 local MT = {
-	__type = "enum",
+	__type = "enum", -- personal convention
 	__index = function(t, k)
 		return t._fields[k]
 		or Enum[k]
@@ -67,79 +70,93 @@ local MT = {
 function Enum:ipairs() return _iterator, self._iterable_values, 0 end
 function Enum:pairs() return next, self._fields, nil end
 
--- pretty print - prints the enum neatly over several lines and indented
-function Enum:pprint()
+-- for pretty printing - assembles the enum neatly over several lines and indented
+function Enum:pstr()
 	local str = "enum {\n"
 	for i=1, #self._ordered_fields do
 		local k = self._ordered_fields[i]
 		local v = self._fields[k]
-		str = str.. fmt(fmt("    %%-%ds%%d\n", self.__longest_field+4), k, v)
+		str = str.. fmt(fmt("    %%-%ds%%d\n", self._longest_field+4), k, v)
 	end
-	print(str .. "}")
+	return str .. "}"
 end
 
+function Enum.make_globals(enable)
+	_make_globals = enable
+end
 
 local function _new_from_table(...)
 	local t = {
 		count = {},
 		_fields = {},
-		_ordered_fields = {},
 		_iterable_values = {},
-		__longest_field = 0,  -- for pretty printing
+		_ordered_fields = {},
+		_longest_field = 0,  -- for pretty printing
 	}
 
 	local exp = false    -- exponential stepping
 	local step = 1       -- incremental step
-	local start = 0      -- starting value
 	local elems = type(...) == "table" and ... or {...}
 
-	-- if 1st field is the enum formatting, parse it and remove it
-	if not elems[1]:match("^[%a_]+") then
-		local str = elems[1]
+	local str = elems[1]:match("^[-+*%d]+")
+	if str then
 		remove(elems, 1)
 
-		-- if string begins with a number, set it as start value
-		if str:match("^[%d-]") then
-			start = tonumber(str:match("[%d-]+")) or 0
-		end
-
-		local plus = str:find('+')  -- check if there's a '+'
-		if plus then  -- if a '+' exists, check if there's a custom increment
-			local inc = match(str:sub(plus+1, #str), "[%d-]+")
-			if inc then step = inc end
-		elseif str:find('*') then  -- otherwise check if there's a '*'
-			exp = true
+		if tonumber(str) then
+			step = tonumber(str)
+		else
+			if #str == 1 then
+				if     str == '-' then step = -1
+				elseif str == '+' then step = 1
+				elseif str == '*' then
+					step, exp = 2, true
+				else
+					error(fmt("invalid format '%s'", str))
+				end
+			else
+				if str:sub(1, 1) ~= '*' then error(fmt("invalid format '%s'", str)) end
+				step, exp = 2, true
+				local inc = tonumber(str:match('%-?%d$'))
+				if not inc and str:sub(2, 2) == '-' then inc = -2 end
+				print("INC", inc)
+				step = (inc and inc ~= 0) and inc or step
+			end
 		end
 	end
 
 	t.count = #elems
 
-	local val = start
+	local val = 0
 	for i=1, #elems do
 		local words = {}    -- try splitting the current entry into parts, if possible
 		for word in elems[i]:gmatch("[%w_-]+") do
 			words[#words+1] = word
 		end
 
+		-- check for duplicates
 		local k = words[1]
 		if t._fields[k] then error(fmt("duplicate field '%s' in enum", k), 2) end
 
-		if #k > t.__longest_field then
-			t.__longest_field = #k
-		end
+		-- keep track of longest for pretty printing
+		if #k > t._longest_field then t._longest_field = #k end
 
 		-- if a second element exists then current entry contains a custom value
 		if words[2] then val = tonumber(words[2]) end
+		if not val then error(fmt("invalid value '%s' for enum field", words[2]), 2) end
 
 		-- store the entries and respective values
 		t._fields[k] = val
 		t._ordered_fields[i] = k    -- useful for printing
 		t._iterable_values[i] = val -- useful for iterators
 
+		if _make_globals then
+			_G[k] = val   -- not recommended
+		end
+
 		-- increase 'val' by increments or exponential growth
-		if not exp then                   val = val + step
-		elseif val < -1 or val > 1 then   val = val < 0 and ceil(val/2) or val + val
-		else                              val = val + 1
+		if not exp then      val = val + step
+		elseif val ~= 0 then val = val * abs(step)
+		else                 val = step > 0 and 1 or -1
 		end
 	end
 
@@ -147,24 +164,24 @@ local function _new_from_table(...)
 end
 
 
-local function _new_from_string(s)
+local function _new_from_string(...)
+	-- check if it's more than one string
+	if select("#",...) > 1 then return _new_from_table(...) end
+
+	-- remove comments
+	local s = (...):gsub("%-%-[^\n]+", "")
+
+	-- remove whitespace and ',' or '=', join custom values to their fields
+	-- and put everything in a table
 	local t = {}
-	s = s:gsub("%-%-[^\n]+", "")
-	print(s)
 	for word in s:gmatch('([^,\r\n\t =]+)') do
-	    t[#t+1] = word
-	end
-
-	local out = {}
-	for i=1, #t do
-		if not tonumber(t[i]) then
-			out[#out+1] = t[i]
-		else
-			out[#out] = out[#out] .. " " .. tonumber(t[i])
+		if not tonumber(word) or #t == 0 then  -- if NAN or is format string
+	    	t[#t+1] = word
+	    else
+			t[#t] = t[#t] .. " " .. tonumber(word)
 		end
-
 	end
-	return _new_from_table(out)
+	return _new_from_table(t)
 end
 
 
@@ -174,10 +191,9 @@ local _constructors = {
 }
 
 local function _new(...)
-	if not _constructors[type(...)] then error("invalid parameters for enum: must be a table or list of strings", 2) end
+	if not _constructors[type(...)] then error("invalid parameters for enum: must be a string, table or string varargs", 2) end
 	return _constructors[type(...)](...)
 end
-
 
 
 return setmetatable( Enum, { __call = function(_, ...) return _new(...) end } )
