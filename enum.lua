@@ -99,6 +99,7 @@ local function _new_from_table(...)
 	local step = 1       -- incremental step
 	local elems = type(...) == "table" and ... or {...}
 
+	-- check format
 	local str = elems[1]:match("^[-+*%d]+")
 	if str then
 		remove(elems, 1)
@@ -119,15 +120,15 @@ local function _new_from_table(...)
 				step, exp = 2, true
 				local inc = tonumber(str:match('%-?%d$'))
 				if not inc and str:sub(2, 2) == '-' then inc = -2 end
-				print("INC", inc)
 				step = (inc and inc ~= 0) and inc or step
 			end
 		end
 	end
 
+	-- assemble the enum
 	t.count = #elems
-
 	local val = 0
+
 	for i=1, #elems do
 		local words = {}    -- try splitting the current entry into parts, if possible
 		for word in elems[i]:gmatch("[%w_-]+") do
