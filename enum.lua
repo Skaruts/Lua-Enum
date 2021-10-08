@@ -23,6 +23,7 @@
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==
 local fmt          = string.format
 local remove       = table.remove
+local floor         = math.floor
 local ceil         = math.ceil
 local abs          = math.abs
 local type         = type
@@ -153,10 +154,23 @@ local function _new_from_table(...)
 			_G[k] = val   -- not recommended
 		end
 
+
 		-- increase 'val' by increments or exponential growth
-		if not exp then      val = val + step
-		elseif val ~= 0 then val = val * abs(step)
-		else                 val = step > 0 and 1 or -1
+		if not exp then
+			val = val + step
+		else
+			if val ~= 0 then
+				if val > 0 and step < 0 then
+					val = floor(val / abs(step))
+				elseif val < 0 and step > 0 then
+					-- val = val * step
+					val = ceil(val / abs(step))
+				else
+					val = val * abs(step)
+				end
+			else
+				val = step > 0 and 1 or -1
+			end
 		end
 	end
 
