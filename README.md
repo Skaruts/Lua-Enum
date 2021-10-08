@@ -10,7 +10,7 @@ local Enum = require "enum"
 
 
 -- construct enum from a multiline string (most convenient)
--- (can contain single line comments, and parenteses can be omitted)
+-- (can contain single line comments, and parentheses can be omitted)
 local days = Enum [[ +1    -- optional format (see below) -- this is the default format
     SUNDAY             
     MONDAY             
@@ -22,21 +22,29 @@ local days = Enum [[ +1    -- optional format (see below) -- this is the default
 ]]
 
 
--- construct enum from several strings, one for each element
+-- construct enum from a table (parentheses can also be omitted)
+local days = Enum { '+1',
+    "SUNDAY", 
+    "MONDAY", 
+    "TUESDAY", 
+    "WEDNESDAY", 
+    "THURSDAY    100",    -- only the multiline-string constructor above
+    "FRIDAY      -10",    -- supports '=' as a separator
+    "SATURDAY"
+}
+
+
+-- construct enum from several strings
 local days = Enum( '+1',    
     "SUNDAY", 
     "MONDAY",
     "TUESDAY",
     "WEDNESDAY",
-    "THURSDAY    100",    -- only the multiline string constructor above
-    "FRIDAY      -10",    -- supports '=' as a separator
+    "THURSDAY    100",
+    "FRIDAY      -10",
     "SATURDAY"
 )
 
-
--- construct enum from a table (it can contain the format)
-local t = {"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"}
-local days = Enum(t)
 ```
 
 After that you can use it:
@@ -44,6 +52,8 @@ After that you can use it:
 print(days.TUESDAY)  -- 2
 print(days.THURSDAY) -- 100
 print(days.count)    -- 7 (number of fields in the enum)
+
+-- usualy only for debugging purposes
 print(days)          -- prints the entire enum
 print(days:pstr())   -- pretty-prints the enum in a more readable form
 ```
@@ -52,23 +62,25 @@ Standard naming rules for identifiers apply: element names cannot contain spaces
 
 Duplicate fields will throw an error.
 
-If you call `Enum.make_globals(true)` before creating your enums, the fields will be added to the global table. Usage of globals in Lua is usually not recommended (they perform worse, they are prone to name clashes, etc), so use this if you know what you're doing. They can however be slightly more convenient because you can just say `TUESDAY` instead of `days.TUESDAY`, and they can be available from anywhere without having to require a file.
+
+You can call `Enum.make_globals(true)` before creating your enums, to have the fields added to the global table. Usage of globals in Lua is usually discouraged (they perform worse, they are prone to name clashes, etc), so use this if you know what you're doing. They can however be slightly more convenient because you can just say `TUESDAY` instead of `days.TUESDAY`, and they can be available from anywhere without having to require a file.
 
 Call `Enum.make_globals(false)` to turn it off for any enums created henceforth.
+
 
 ### Format
 
 The format is optional, and it allows you to specify how values are incremented. When omited, a default enum is created, where fields are given values from `0` to `N`, and are incremented by `1`. If it's included, then it has to be the first parameter.
 
-For regular increments this will be suficient (where increment values can be omitted):
+For the most common use cases, this will be suficient (and increment values can be omitted):
 ```lua
-+        -- increment by 1 - equivalent to '+1', or just '1'
++        -- increment by 1 - equivalent to '+1', or just '1' (this is the default, so it can be omited entirely)
 -        -- decrement by 1 - equivalent to '-1'
 *        -- exponential increments by double - equivalent to '*2'   - (0, 1, 2, 4, 8, 16, ...)
 *-       -- exponential decrements by double - equivalent to '*-2'  - (0, -1, -2, -4, -8, -16, ...)
 ```
 
-But differnt increments can be specified after the sign:
+However, different increments can be specified after the sign:
 
 ```lua
 +3       -- increaments by 3 (the '+' can be omitted)
@@ -78,6 +90,7 @@ But differnt increments can be specified after the sign:
 ```
 
 You can still control the flow of the increments by adding custom values to fields.
+
 
 ### Loops
 
