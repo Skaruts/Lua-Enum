@@ -29,7 +29,7 @@ local days = Enum( '+1',
     "TUESDAY",
     "WEDNESDAY",
     "THURSDAY    100",    -- only the multiline string constructor above
-    "FRIDAY      -10",    -- supports '=' as a separator (at least for now)
+    "FRIDAY      -10",    -- supports '=' as a separator
     "SATURDAY"
 )
 
@@ -71,7 +71,7 @@ For regular increments this will be suficient (where increment values can be omi
 But differnt increments can be specified after the sign:
 
 ```lua
-+3       -- increaments by 3 
++3       -- increaments by 3 (the '+' can be omitted)
 -10      -- decrements by 10
 *4       -- increments exponentially by quadruple (0, 1, 4, 16, 64, ...)
 *-4      -- decrements exponentially by quadruple (0, -1, -4, -16, -64, ...)
