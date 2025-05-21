@@ -22,7 +22,7 @@ local days = Enum [[ +1    -- optional format (see below) -- this is the default
 ]]
 
 
--- construct enum from a table (parentheses can also be omitted)
+-- construct enum from a table of strings (parentheses can also be omitted)
 local days = Enum { '+1',
     "SUNDAY", 
     "MONDAY", 
@@ -34,7 +34,7 @@ local days = Enum { '+1',
 }
 
 
--- construct enum from several strings
+-- construct enum from several loose strings
 local days = Enum( '+1',    
     "SUNDAY", 
     "MONDAY",
@@ -46,33 +46,34 @@ local days = Enum( '+1',
 )
 
 ```
-
 After that you can use it:
 ```lua
 print(days.TUESDAY)  -- 2
 print(days.THURSDAY) -- 100
 print(days.count)    -- 7 (number of fields in the enum)
 
+print(days:get_field_name(2))  -- MONDAY
+
 -- usualy only for debugging purposes
-print(days)          -- prints the entire enum
-print(days:pstr())   -- pretty-prints the enum in a more readable form
+print(days)               -- prints the entire enum
+print(days:pretty_str())  -- pretty-prints the enum in a more readable form
 ```
 
-Standard naming rules for identifiers apply: element names cannot contain spaces, must start by a letter or underscore, can contain numbers, etc.
+Standard naming rules for identifiers apply: element names cannot contain spaces, must start with a letter or underscore, can contain numbers, etc.
 
 Duplicate fields will throw an error.
 
+##### Note: Enums start at '0' by default. If you need them to start from '1' you must specify a custom value for the first element.
 
-You can call `Enum.make_globals(true)` before creating your enums, to have the fields added to the global table. Usage of globals in Lua is usually discouraged (they perform worse, they are prone to name clashes, etc), so use this if you know what you're doing. They can however be slightly more convenient because you can just say `TUESDAY` instead of `days.TUESDAY`, and they can be available from anywhere without having to require a file.
+If you'd like to transfer the fields of an enum into some other table, you can call `Enum.copy_to(t)`. Note that this is a simple copy, it won't merge enums. This is only intended for flattening enums into a class table, or to create globals from enum fields.
 
-Call `Enum.make_globals(false)` to turn it off for any enums created henceforth.
 
 
 ### Format
 
-The format is optional, and it allows you to specify how values are incremented. When omited, a default enum is created, where fields are given values from `0` to `N`, and are incremented by `1`. If it's included, then it has to be the first parameter.
+The format is optional, and it allows you to specify how values are incremented. When omited, a default enum is created, where fields are given values from `0` to `N`, and are incremented by `1`. If it's included, then it must be the first parameter.
 
-For the most common use cases, this will be suficient (and increment values can be omitted):
+For most use cases, a simple sign should be enough (increment values can be omitted):
 ```lua
 +        -- increment by 1 - equivalent to '+1', or just '1' (this is the default, so it can be omited entirely)
 -        -- decrement by 1 - equivalent to '-1'
@@ -94,7 +95,7 @@ You can still control the flow of the increments by adding custom values to fiel
 
 ### Loops
 
-You can use enums in loops. 
+You can use enums in loops.
 ```lua
 -- loop with `ipairs` or `pairs` in lua 5.2+
 for i, v in ipairs(days) do
