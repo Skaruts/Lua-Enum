@@ -1,25 +1,47 @@
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==
--- MIT License
+--[[    MIT License
+
+Copyright (c) 2019 Skaruts (https://github.com/Skaruts/Lua-Enum)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+]]
+--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==
 --
--- Copyright (c) 2019 Skaruts (https://github.com/Skaruts/Lua-Enum)
+--          Enum
 --
--- Permission is hereby granted, free of charge, to any person obtaining a copy
--- of this software and associated documentation files (the "Software"), to deal
--- in the Software without restriction, including without limitation the rights
--- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
--- copies of the Software, and to permit persons to whom the Software is
--- furnished to do so, subject to the following conditions:
+--    An Enumeration implementation in Lua.
 --
--- The above copyright notice and this permission notice shall be included in all
--- copies or substantial portions of the Software.
 --
--- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
--- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
--- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
--- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
--- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
--- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
--- SOFTWARE.
+--      Quick Reference:
+--          local Foo = Enum [[
+--              NULL
+--              DERP
+--          ]]
+--
+--          Foo:ipairs()  -- for lua 5.2+ use the regular 'ipairs'
+--          Foo:pairs()   -- for lua 5.2+ use the regular 'pairs'
+--
+--          Foo:pretty_str()
+--          Foo:get_field_name(idx)
+--          Foo:copy_to(t)
+--
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==
 local fmt          = string.format
 local remove       = table.remove
@@ -40,11 +62,10 @@ local function _iterator(t, i)
 	return i, val
 end
 
-local _make_globals = false
 
 local Enum = {}
 local MT = {
-	__type = "enum", -- personal convention
+	__type = "Enum", -- personal convention
 	__index = function(t, k)
 		return t._fields[k]
 		or Enum[k]
@@ -67,13 +88,20 @@ local MT = {
 	__pairs = function(t) return next, t._fields, nil end,
 }
 
+function Enum.make_globals(enable)
+	error(2, "'Enum.make_globals' has been deprecated and replaced with 'enum:copy_to'")
+end
+
 -- for lua 5.1
 function Enum:ipairs() return _iterator, self._iterable_values, 0 end
 function Enum:pairs() return next, self._fields, nil end
 
--- for pretty printing - assembles the enum neatly over several lines and indented
-function Enum:pstr()
-	local str = "enum {\n"
+-- returns a string representation of the Enum for pretty printing
+-- lays out the enum neatly over several lines with indentation,
+-- optionally preffixed by 'name'
+function Enum:pretty_str(name)
+	name = name or "Enum"
+	local str = name .. " {\n"
 	for i=1, #self._ordered_fields do
 		local k = self._ordered_fields[i]
 		local v = self._fields[k]
@@ -82,8 +110,16 @@ function Enum:pstr()
 	return str .. "}"
 end
 
-function Enum.make_globals(enable)
-	_make_globals = enable
+function Enum:get_field_name(idx)
+	return self._ordered_fields[idx]
+end
+
+-- copy enum fields into table 't',
+-- such that enum.FOO becomes also available as t.FOO
+function Enum:copy_to(t)
+	for k, v in self:pairs() do
+		t[k] = v
+	end
 end
 
 local function _new_from_table(...)
@@ -151,11 +187,6 @@ local function _new_from_table(...)
 		t._ordered_fields[i] = k    -- useful for printing
 		t._iterable_values[i] = val -- useful for iterators
 
-		if _make_globals then
-			_G[k] = val   -- not recommended
-		end
-
-
 		-- increase 'val' by increments or exponential growth
 		if not exp then
 			val = val + step
@@ -191,8 +222,8 @@ local function _new_from_string(...)
 	local t = {}
 	for word in s:gmatch('([^,\r\n\t =]+)') do
 		if not tonumber(word) or #t == 0 then  -- if NAN or is format string
-	    	t[#t+1] = word
-	    else
+			t[#t+1] = word
+		else
 			t[#t] = t[#t] .. " " .. tonumber(word)
 		end
 	end
@@ -205,10 +236,11 @@ local _constructors = {
 	table = _new_from_table,
 }
 
-local function _new(...)
-	if not _constructors[type(...)] then error("invalid parameters for enum: must be a string, table or string varargs", 2) end
-	return _constructors[type(...)](...)
+function Enum.new(...)
+	local constructor = _constructors[type(...)]
+	if not constructor then error("invalid parameters for enum: must be a string, table or string varargs", 2) end
+	return constructor(...)
 end
 
 
-return setmetatable( Enum, { __call = function(_, ...) return _new(...) end } )
+return setmetatable( Enum, { __call = function(_, ...) return Enum.new(...) end } )
