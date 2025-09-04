@@ -161,6 +161,8 @@ local function _new_from_table(...)
 		end
 	end
 
+	if step == 0 then error("Enum stepping cannot be zero", 2) end
+
 	-- assemble the enum
 	t.count = #elems
 	local val = 0
