@@ -89,7 +89,7 @@ local MT = {
 }
 
 function Enum.make_globals(enable)
-	error(2, "'Enum.make_globals' has been deprecated and replaced with 'enum:copy_to'")
+	error("'Enum.make_globals' has been deprecated and replaced with 'enum:copy_to'", 2)
 end
 
 -- for lua 5.1
