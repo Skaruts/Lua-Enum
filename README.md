@@ -52,7 +52,7 @@ print(days.TUESDAY)  -- 2
 print(days.THURSDAY) -- 100
 print(days.count)    -- 7 (number of fields in the enum)
 
-print(days:get_field_name(2))  -- MONDAY
+print(days:get_field_name(days.MONDAY))  -- MONDAY
 
 -- usualy only for debugging purposes
 print(days)               -- prints the entire enum
