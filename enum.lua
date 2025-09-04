@@ -64,15 +64,9 @@ local function _iterator(t, i)
 end
 
 
-local Enum = {}
-local MT = {
+local Enum = {
 	__type = "Enum", -- personal convention
-	__index = function(t, k)
-		return t._fields[k]
-		or Enum[k]
-		or t._iterable_values[k]
-		or error(fmt("field %s does not exist in enum", k), 2)
-	end,
+
 	__newindex = function(t, k, v) error("cannot assign to an enum (enums are immutable)", 2) end,
 	__tostring = function(t)
 		local str = "enum: "
@@ -88,6 +82,14 @@ local MT = {
 	__ipairs = function(t) return _iterator, t._iterable_values, 0 end,
 	__pairs = function(t) return next, t._fields, nil end,
 }
+
+Enum.__index = function(t, k)
+	return t._fields[k]
+	or Enum[k]
+	or t._iterable_values[k]
+	or error(fmt("field %s does not exist in enum", k), 2)
+end
+
 
 function Enum.make_globals(enable)
 	error("'Enum.make_globals' has been deprecated and replaced with 'enum:copy_to'", 2)
@@ -211,7 +213,7 @@ local function _new_from_table(...)
 		end
 	end
 
-	return setmetatable(t, MT)
+	return setmetatable(t, Enum)
 end
 
 
