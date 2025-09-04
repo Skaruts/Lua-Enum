@@ -24,7 +24,7 @@ SOFTWARE.
 ]]
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==
 --
---          Enum
+--          Enum    (version 18)
 --
 --    An Enumeration implementation in Lua.
 --
