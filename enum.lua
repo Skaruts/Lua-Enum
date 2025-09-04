@@ -39,10 +39,11 @@ SOFTWARE.
 --          Foo:pairs()   -- for lua 5.2+ use the regular 'pairs'
 --
 --          Foo:pretty_str()
---          Foo:get_field_name(idx)
+--          Foo:get_field_name(field_val)
 --          Foo:copy_to(t)
 --
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==
+
 local fmt          = string.format
 local remove       = table.remove
 local floor         = math.floor
@@ -110,8 +111,8 @@ function Enum:pretty_str(name)
 	return str .. "}"
 end
 
-function Enum:get_field_name(idx)
-	return self._ordered_fields[idx]
+function Enum:get_field_name(field_val)
+	return self._fields_by_value[field_val]
 end
 
 -- copy enum fields into table 't',
@@ -128,6 +129,7 @@ local function _new_from_table(...)
 		_fields = {},
 		_iterable_values = {},
 		_ordered_fields = {},
+		_fields_by_value = {},
 		_longest_field = 0,  -- for pretty printing
 	}
 
@@ -188,6 +190,7 @@ local function _new_from_table(...)
 		t._fields[k] = val
 		t._ordered_fields[i] = k    -- useful for printing
 		t._iterable_values[i] = val -- useful for iterators
+		t._fields_by_value[val] = k
 
 		-- increase 'val' by increments or exponential growth
 		if not exp then
